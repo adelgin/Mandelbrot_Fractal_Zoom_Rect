@@ -20,6 +20,7 @@ public class Converter {
     ){
         setXShape(xMin, xMax);
         setYShape(yMin, yMax);
+        setShape(xMin, xMax, yMin, yMax);
         setWidth(width);
         setHeight(height);
     }
@@ -32,13 +33,38 @@ public class Converter {
         return xMax;
     }
 
+    public void setShape(double newXMin, double newXMax, double newYMin, double newYMax) {
+        this.xMin = Math.min(newXMin, newXMax);
+        this.xMax = Math.max(newXMin, newXMax);
+
+        double currentAspectRatio = getWidth() / (double) getHeight();
+
+        double newHeight = (xMax - xMin) / currentAspectRatio;
+        double centerY = (this.yMin + this.yMax) / 2;
+
+        this.yMin = centerY - newHeight / 2;
+        this.yMax = centerY + newHeight / 2;
+
+        this.yMin = Math.min(newYMin, newYMax);
+        this.yMax = Math.max(newYMin, newYMax);
+
+        double newWidth = (yMax - yMin) * currentAspectRatio;
+        double centerX = (this.xMin + this.xMax) / 2;
+
+        this.xMin = centerX - newWidth / 2;
+        this.xMax = centerX + newWidth / 2;
+    }
+
     public void setXShape(double xMin, double xMax) {
         this.xMin = Math.min(xMin, xMax);
         this.xMax = Math.max(xMin, xMax);
-        if (abs(xMin-xMax) < 1e-1){
-            this.xMin -= 0.05;
-            this.xMax += 0.05;
-        }
+
+        double currentAspectRatio = getWidth() / (double) getHeight();
+        double newHeight = (xMax - xMin) / currentAspectRatio;
+        double centerY = (yMin + yMax) / 2;
+
+        this.yMin = centerY - newHeight / 2;
+        this.yMax = centerY + newHeight / 2;
     }
 
     public double getYMin() {
@@ -52,10 +78,13 @@ public class Converter {
     public void setYShape(double yMin, double yMax) {
         this.yMin = Math.min(yMin, yMax);
         this.yMax = Math.max(yMin, yMax);
-        if (abs(yMin-yMax) < 1e-1){
-            this.yMin -= 0.05;
-            this.yMax += 0.05;
-        }
+
+        double currentAspectRatio = getWidth() / (double) getHeight();
+        double newWidth = (yMax - yMin) * currentAspectRatio;
+        double centerX = (xMin + xMax) / 2;
+
+        this.xMin = centerX - newWidth / 2;
+        this.xMax = centerX + newWidth / 2;
     }
 
     public int getWidth() {

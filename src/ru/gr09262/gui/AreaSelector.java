@@ -25,7 +25,7 @@ public class AreaSelector {
      * отрисовки изображения
      */
     public void setGraphics(Graphics graphics) {
-        if (mainGraphics == null){
+        if (mainGraphics == null) {
             // Если mainGraphics устанавливается впервые,
             // будет выполнена инициализация режима XOR
             // для устранения возможности появления артефактов.
@@ -85,6 +85,11 @@ public class AreaSelector {
      */
     public void clearSelection(){
         rect.clearPoints();
+    }
+
+    public Rect getRect() {
+        //return this.rect;
+        return rect.getStartPoint() != null ? this.rect : null;
     }
 
 }
