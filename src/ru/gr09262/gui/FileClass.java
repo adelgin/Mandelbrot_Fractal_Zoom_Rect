@@ -10,10 +10,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Класс для работы с файлами, используется для сохранения и открытия файлов
+ */
 public class FileClass extends JFileChooser {
     private final FileFilter pngFilter;
     private final FileFilter mndlFilter;
     public final FractalPainter fractalPainter;
+
+    /**
+     * Конструктор класса. Здесь задаются параметры для сохранения в формат .png и в произвольный файловый формат .mndl
+     * @param Painter сюда передаётся FractalPainter, чтобы получить с него все данные о текущей ситуации на картинке
+     */
     public FileClass(FractalPainter Painter) {
         fractalPainter = Painter;
         pngFilter = new FileFilter() {
@@ -38,6 +46,12 @@ public class FileClass extends JFileChooser {
         };
         this.setAcceptAllFileFilterUsed(false);
     }
+
+    /**
+     * Метод для сохранения файла в формат PNG
+     * @param panel текущая панель с картинкой фрактала
+     * @param fractalPainter сюда передаётся FractalPainter, чтобы получить с него все данные о текущей ситуации на картинке
+     */
     public void showSaveDialogPNG(JPanel panel, FractalPainter fractalPainter){
         this.setDialogTitle("Сохранение файла");
         this.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -70,6 +84,11 @@ public class FileClass extends JFileChooser {
             }
         }
 
+    /**
+     * Метод для сохранения файла в формат MNDL
+     * @param panel текущая панель с картинкой фрактала
+     * @param fractalPainter сюда передаётся FractalPainter, чтобы получить с него все данные о текущей ситуации на картинке
+     */
     public void showSaveDialogMNDL(JPanel panel, FractalPainter fractalPainter){
         this.setDialogTitle("Сохранение файла");
         this.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -105,6 +124,11 @@ public class FileClass extends JFileChooser {
         }
     }
 
+    /**
+     * Метод для открытия файла
+     * @param panel текущая панель с картинкой фрактала
+     * @param fractalPainter сюда передаётся FractalPainter, чтобы получить с него все данные о текущей ситуации на картинке
+     */
     public void openFileDialog(JPanel panel, FractalPainter fractalPainter) {
         this.setDialogTitle("Сохранение файла");
         this.setFileSelectionMode(JFileChooser.FILES_ONLY);

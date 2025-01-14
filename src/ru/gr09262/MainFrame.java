@@ -13,6 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * Класс для отображения фрактала
+ */
 public class MainFrame extends JFrame {
     private final FractalPainter fPainter = new FractalPainter(-2.0, 1.0, -1.0, 1.0);
     private final JPanel mainPanel = new JPanel() {
@@ -24,6 +27,9 @@ public class MainFrame extends JFrame {
     private final AreaSelector selector = new AreaSelector();
     private final UndoStack undoStack = new UndoStack(); // fPainter.getConverter());
 
+    /**
+     * Конструктор MainFrame. Здесь происходит создание меню, присваивание клавиш и мышки к функциям программы
+     */
     public MainFrame() {
         mainPanel.setBackground(Color.WHITE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -36,7 +42,7 @@ public class MainFrame extends JFrame {
 
         FileClass fileSaving = new FileClass(fPainter);
 
-        // код для меню опции файл
+        // Код для меню опции файл
 
         JMenu fileMenu = new JMenu("Файл");
 
@@ -55,7 +61,7 @@ public class MainFrame extends JFrame {
 
         mndlFileItem.addActionListener(e -> fileSaving.showSaveDialogMNDL(mainPanel, fPainter));
 
-        // код для меню опции Правка
+        // Код для меню опции Правка
 
         JMenu editMenu = new JMenu("Изменить");
 
@@ -64,12 +70,12 @@ public class MainFrame extends JFrame {
 
         undoItem.addActionListener(e -> undoStack.undo(mainPanel, fPainter));
 
-        JMenuItem redoItem = new JMenuItem("Отменить изменения");
+        JMenuItem redoItem = new JMenuItem("Повторить");
         editMenu.add(redoItem);
 
         redoItem.addActionListener(e -> undoStack.redo(mainPanel, fPainter));
 
-        // для цвета
+        // Для цвета
 
         JMenu viewMenu = new JMenu("Вид");
 
@@ -92,6 +98,11 @@ public class MainFrame extends JFrame {
         viewMenu.add(standartColorItem);
 
         standartColorItem.addActionListener(e -> {fPainter.colorId = -1; mainPanel.repaint();});
+
+        JMenuItem skyColorItem = new JMenuItem("Небо");
+        viewMenu.add(skyColorItem);
+
+        skyColorItem.addActionListener(e -> {fPainter.colorId = 4; mainPanel.repaint();});
 
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
@@ -137,7 +148,6 @@ public class MainFrame extends JFrame {
             }
         });
 
-
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -155,30 +165,29 @@ public class MainFrame extends JFrame {
                     x = x - centerX;
                     y = y - centerY;
 
-
                     fPainter.updateCoordinates(fPainter.getConverter().getXMin() + x, fPainter.getConverter().getXMax() + x, fPainter.getConverter().getYMin() + y, fPainter.getConverter().getYMax() + y);
                     mainPanel.repaint();
                 }
             }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                selector.paint();
-                Rect rect = selector.getRect();
-                if (rect != null) {
-                    undoStack.addOperation(fPainter.getConverter());
-                    Converter converter = fPainter.getConverter();
-                    double newXMin = converter.xScr2Crt(rect.getStartPoint().x);
-                    double newYMin = converter.yScr2Crt(rect.getStartPoint().y);
-                    double newXMax = converter.xScr2Crt(rect.getStartPoint().x + rect.getWidth());
-                    double newYMax = converter.yScr2Crt(rect.getStartPoint().y + rect.getHeigth());
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            selector.paint();
+            Rect rect = selector.getRect();
+            if (rect != null) {
+                undoStack.addOperation(fPainter.getConverter());
+                Converter converter = fPainter.getConverter();
+                double newXMin = converter.xScr2Crt(rect.getStartPoint().x);
+                double newYMin = converter.yScr2Crt(rect.getStartPoint().y);
+                double newXMax = converter.xScr2Crt(rect.getStartPoint().x + rect.getWidth());
+                double newYMax = converter.yScr2Crt(rect.getStartPoint().y + rect.getHeigth());
 
-                    fPainter.updateCoordinates(newXMin, newXMax, newYMin, newYMax);
-                    mainPanel.repaint();
-                }
-                selector.clearSelection();
+                fPainter.updateCoordinates(newXMin, newXMax, newYMin, newYMax);
+                mainPanel.repaint();
             }
+            selector.clearSelection();
+        }
         });
 
         mainPanel.addMouseMotionListener(new MouseAdapter() {
